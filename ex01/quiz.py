@@ -1,7 +1,7 @@
 import random
 import datetime
 
-def syutudai(question):
+def syutudai(questions):
     quest = random.choice(questions)
     p_quest = quest["q"]
     print(f"問題:{p_quest}")
