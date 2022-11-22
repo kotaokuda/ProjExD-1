@@ -1,5 +1,6 @@
 import random
 import time
+
 num_alpa = 0 # 対象文字数
 remove_alpha = 0 #欠損文字数
 max_rec = 10 #最大繰り返し回数
