@@ -9,9 +9,12 @@ def button_click(event):
 root = tk.Tk()
 root.geometry("300x500")
 
+enrty = tk.Entry(root, justify = "right", width = 10, font = ("", 40))
+enrty.grid(row = 0, column = 0, columnspan = 3)
+
 for i in range(9, -1, -1):
     b = tk.Button(root, text = 9-i, width = 4, height = 2, font = ("", 30))
     b.bind("<1>", button_click)
-    b.grid(row = i//3, column = i%3)
+    b.grid(row = 1+i//3, column = i%3)
 
 root.mainloop()
