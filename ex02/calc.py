@@ -47,7 +47,7 @@ def tx(event):
     if(len(txen)>0):
         tlist = list(txen)
         if(tlist[-1] in ng):
-            return
+            return None
         else:
             tt = txen 
             for op in operations:
