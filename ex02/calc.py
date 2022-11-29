@@ -17,4 +17,9 @@ for i in range(9, -1, -1):
     b.bind("<1>", button_click)
     b.grid(row = 1+i//3, column = i%3)
 
+buttonP = tk.Button(root, text = "+", width = 4, height = 2, font = ("", 30))
+buttonP.grid(row = 4, column = 1 )
+buttonE = tk.Button(root, text = "=", width = 4, height = 2, font = ("", 30))
+buttonE.grid(row = 4, column = 2)
+
 root.mainloop()
