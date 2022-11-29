@@ -6,6 +6,12 @@ def button_click(event):
     num = btn["text"]
     enrty.insert(tk.END, num)
 
+def calc_num(event):
+    calc = enrty.get()
+    result = eval(calc)
+    enrty.delete(0,tk.END)
+    enrty.insert(tk.END, result)
+
 root = tk.Tk()
 root.geometry("300x500")
 
@@ -21,6 +27,7 @@ buttonP = tk.Button(root, text = "+", width = 4, height = 2, font = ("", 30))
 buttonP.bind("<1>", button_click)
 buttonP.grid(row = 4, column = 1 )
 buttonE = tk.Button(root, text = "=", width = 4, height = 2, font = ("", 30))
+buttonE.bind("<1>", calc_num)
 buttonE.grid(row = 4, column = 2)
 
 root.mainloop()
