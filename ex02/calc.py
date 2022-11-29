@@ -9,14 +9,14 @@ def button_click(event,str = "None"):
         num = str
     if(mark):
         entry.insert(tk.END, num)
+        if(num in ng):
+            mark = False
     else:
         if(num in ng):
             mark = False
         else:
             mark = True
             entry.insert(tk.END, num)
-    if(num in ng):
-        mark = False
 
 def calc_num(event):
     calc = entry.get()
