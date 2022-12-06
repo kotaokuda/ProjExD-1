@@ -2,15 +2,17 @@ import tkinter as tk
 import maze_maker as mm
 
 def main_proc():
-    global cx, cy, key
+    global cx, cy, key, mx, my
     if (key == "Up"):
-        cy -= 20
+        my -= 1
     if (key == "Down"):
-        cy += 20
+        my += 1
     if (key == "Left"):
-        cx -= 20
+        mx -= 1
     if (key == "Right"):
-        cx += 20
+        mx += 1
+    cx = 50 + mx * 100
+    cy = 50 + my * 100
     Canvas.coords("Kouka", cx, cy)
 
 def key_up(event):
@@ -26,6 +28,8 @@ def key_down(event):
 if __name__ == "__main__":
     cx = 150
     cy = 150
+    mx = 1
+    my = 1
     key = ""
     root = tk.Tk()
     root.title("迷えるこうかとん")
