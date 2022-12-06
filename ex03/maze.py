@@ -105,10 +105,8 @@ def goal_message():
 
 def InitAndPlayMaze(): # 関数にしたらToDoの迷路を作り直す機能が作りやすいかなと考え追加したが、間に合わず無用の長物と化した関数
     global cx, cy, mx, my, key, R, G, starttime, maze, Canvas, root, image
-    cx = 150
-    cy = 150
-    mx = 1
-    my = 1
+    cx, cy = 150, 150
+    mx, my = 1, 1
     key = ""
     R = False # 壁に上るマスを通過したかどうかの判定
     G = False # ゴールしたかどうかの判定
