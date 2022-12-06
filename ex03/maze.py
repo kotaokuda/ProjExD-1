@@ -1,6 +1,11 @@
 import tkinter as tk
 import maze_maker as mm
 
+
+def key_down(event):
+    global key
+    key = event.keysym
+
 if __name__ == "__main__":
     cx = 300
     cy = 400
@@ -11,4 +16,5 @@ if __name__ == "__main__":
     image = tk.PhotoImage(file="fig/0.png")
     Canvas.create_image(cx, cy, image=image)
     Canvas.pack()
+    root.bind("<KeyPress>", key_down)
     root.mainloop()
