@@ -4,6 +4,7 @@ import maze_maker as mm
 if __name__ == "__main__":
     cx = 300
     cy = 400
+    key = ""
     root = tk.Tk()
     root.title("迷えるこうかとん")
     Canvas = tk.Canvas(root, width=1500, height=900, bg="black")
