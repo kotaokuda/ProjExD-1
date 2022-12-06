@@ -4,13 +4,17 @@ import maze_maker as mm
 def main_proc():
     global cx, cy, key, mx, my
     if (key == "Up"):
-        my -= 1
+        if(maze[mx][my-1] == 0):
+            my -= 1
     if (key == "Down"):
-        my += 1
+        if(maze[mx][my+1] == 0):
+            my += 1
     if (key == "Left"):
-        mx -= 1
+        if(maze[mx-1][my] == 0):
+            mx -= 1
     if (key == "Right"):
-        mx += 1
+        if(maze[mx+1][my] == 0):
+            mx += 1
     cx = 50 + mx * 100
     cy = 50 + my * 100
     Canvas.coords("Kouka", cx, cy)
@@ -22,8 +26,7 @@ def key_up(event):
 def key_down(event):
     global key
     key = event.keysym
-    main_proc()
-    print(key)
+    root.after(10,main_proc)
 
 if __name__ == "__main__":
     cx = 150
