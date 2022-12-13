@@ -20,10 +20,25 @@ def main():
 
     pg.display.update()
     while True:
+        scrn_sfc.blit(back_sfc, back_rct)
+
         for event in pg.event.get():
             if event.type == pg.QUIT: return
+
+        key_lst = pg.key.get_pressed()
+        if key_lst[pg.K_UP]: 
+            tori_rct.centery -= 1
+        if key_lst[pg.K_DOWN]:
+            tori_rct.centery += 1
+        if key_lst[pg.K_LEFT]:
+            tori_rct.centerx -= 1
+        if key_lst[pg.K_RIGHT]: 
+            tori_rct.centerx += 1
+        scrn_sfc.blit(tori_sfc, tori_rct)
+
         pg.display.update()
         clock.tick(1000)
+
 
 if __name__ == "__main__":
     pg.init()
