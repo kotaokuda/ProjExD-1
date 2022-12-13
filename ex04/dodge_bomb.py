@@ -18,8 +18,8 @@ def check_tori(obj_rct, scr_rct, int):
         obj_rct.centery += -1*int
 
 def main():
-    tori_spd = 1
-    bomb_spd = 1
+    tori_spd = 2
+    bomb_spd = 2
 
     clock = pg.time.Clock()
     
@@ -76,6 +76,9 @@ def main():
         vx *= x
         vy *= y
         scrn_sfc.blit(bomb_sfc, bomb_rct)
+        
+        if tori_rct.colliderect(bomb_rct):
+            return "GAME OVER"
 
         pg.display.update()
         clock.tick(1000)
