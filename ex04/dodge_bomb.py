@@ -138,7 +138,6 @@ def main():
                 return "GAME OVER"
         if tmr%1000 == 0: #爆弾を定期的に追加
             bombs.append(bomb(scrn_sfc,scrn_rct))
-            print("+")
 
         now = time.time()
         txt = playtime.render(f"{now-bgn:.01f}s", True, "black")
