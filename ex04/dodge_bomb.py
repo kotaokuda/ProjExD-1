@@ -57,7 +57,6 @@ def check_tori(obj_rct, scr_rct, int): #こうかとんが画面外に出たと�
 #         by = random.randint(0, scrn_rct.height)
 #         item_sfc.set_colorkey("black")
 #         scrn_sfc.blit(item_sfc, (bx, by))
-        
 
 def main():
     tori_spd = 3 #こうかとんのスピード
@@ -129,7 +128,6 @@ def main():
         if tmr%1000 == 0: #爆弾を定期的に追加
             bombs.append(bomb(scrn_sfc,scrn_rct))
             print("+")
-            
 
         now = time.time()
         txt = playtime.render(f"{now-bgn:.01f}s", True, "black")
