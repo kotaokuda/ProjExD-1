@@ -12,6 +12,12 @@ def main():
     back_rct.center = 800, 450
     scrn_sfc.blit(back_sfc, back_rct)
 
+    tori_sfc = pg.image.load("fig/3.png")
+    tori_sfc = pg.transform.rotozoom(tori_sfc, 0, 2.0)
+    tori_rct = tori_sfc.get_rect()
+    tori_rct.center = 900, 400
+    scrn_sfc.blit(tori_sfc, tori_rct)
+
     pg.display.update()
     while True:
         for event in pg.event.get():
