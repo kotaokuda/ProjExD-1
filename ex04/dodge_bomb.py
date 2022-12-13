@@ -40,7 +40,7 @@ def check_bound(obj_rct, scr_rct): #要素が画面の外に行かないか確�
         y = -1
     return x, y
 
-def check_tori(obj_rct, scr_rct, int): #こうかとんが画面買いに出たときの処理を行う
+def check_tori(obj_rct, scr_rct, int): #こうかとんが画面外に出たときの処理を行う
     tx, ty = check_bound(obj_rct, scr_rct)
     if tx == -1:
         obj_rct.centerx += -1*int
