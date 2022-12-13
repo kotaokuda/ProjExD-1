@@ -104,16 +104,24 @@ def main():
         key_lst = pg.key.get_pressed()
         if key_lst[pg.K_UP]: 
             tori_rct.centery -= tori_spd
-            check_tori(tori_rct,scrn_rct, -tori_spd)
+            _, y = check_bound(tori_rct, scrn_rct)
+            if y < 0:
+                tori_rct.centery += tori_spd
         if key_lst[pg.K_DOWN]:
             tori_rct.centery += tori_spd
-            check_tori(tori_rct,scrn_rct, tori_spd)
+            _, y = check_bound(tori_rct, scrn_rct)
+            if y < 0:
+                tori_rct.centery -= tori_spd
         if key_lst[pg.K_LEFT]:
             tori_rct.centerx -= tori_spd
-            check_tori(tori_rct,scrn_rct, -tori_spd)
+            x, _ = check_bound(tori_rct, scrn_rct)
+            if x < 0:
+                tori_rct.centerx += tori_spd
         if key_lst[pg.K_RIGHT]: 
             tori_rct.centerx += tori_spd
-            check_tori(tori_rct,scrn_rct, tori_spd)
+            x, _ = check_bound(tori_rct, scrn_rct)
+            if x < 0:
+                tori_rct.centerx -= tori_spd
 
         scrn_sfc.blit(tori_sfc, tori_rct)
         for b in bombs:
