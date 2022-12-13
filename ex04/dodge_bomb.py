@@ -45,6 +45,10 @@ def main():
             tori_rct.centerx += 1
         scrn_sfc.blit(tori_sfc, tori_rct)
 
+        bx += 1
+        by += 1
+        scrn_sfc.blit(bomb_sfc, (bx, by))
+
         pg.display.update()
         clock.tick(1000)
 
