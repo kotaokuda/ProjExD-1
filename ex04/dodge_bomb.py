@@ -40,12 +40,12 @@ def check_bound(obj_rct, scr_rct): #要素が画面の外に行かないか確�
         y = -1
     return x, y
 
-def check_tori(obj_rct, scr_rct, int): #こうかとんが画面外に出たときの処理を行う
-    tx, ty = check_bound(obj_rct, scr_rct)
-    if tx == -1:
-        obj_rct.centerx += -1*int
-    if ty == -1:
-        obj_rct.centery += -1*int
+# def check_tori(obj_rct, scr_rct, int): #こうかとんが画面外に出たときの処理を行う
+#     tx, ty = check_bound(obj_rct, scr_rct)
+#     if tx == -1:
+#         obj_rct.centerx += -1*int
+#     if ty == -1:
+#         obj_rct.centery += -1*int
 
 # def popitem(tmr): #アイテムを出したかった残骸
 #     global scrn_sfc, scrn_rct
@@ -107,16 +107,19 @@ def main():
             _, y = check_bound(tori_rct, scrn_rct)
             if y < 0:
                 tori_rct.centery += tori_spd
+
         if key_lst[pg.K_DOWN]:
             tori_rct.centery += tori_spd
             _, y = check_bound(tori_rct, scrn_rct)
             if y < 0:
                 tori_rct.centery -= tori_spd
+
         if key_lst[pg.K_LEFT]:
             tori_rct.centerx -= tori_spd
             x, _ = check_bound(tori_rct, scrn_rct)
             if x < 0:
                 tori_rct.centerx += tori_spd
+
         if key_lst[pg.K_RIGHT]: 
             tori_rct.centerx += tori_spd
             x, _ = check_bound(tori_rct, scrn_rct)
