@@ -1,5 +1,6 @@
 import pygame as pg
 import sys
+import random
 
 def main():
     clock = pg.time.Clock()
@@ -18,7 +19,15 @@ def main():
     tori_rct.center = 900, 400
     scrn_sfc.blit(tori_sfc, tori_rct)
 
+    bomb_sfc = pg.Surface((20, 20))
+    pg.draw.circle(bomb_sfc, "red", (10,10), 10)
+    bx = random.randint(0, scrn_sfc.get_width())
+    by = random.randint(0, scrn_sfc.get_height())
+    bomb_sfc.set_colorkey("black")
+    scrn_sfc.blit(bomb_sfc, (bx, by))
+
     pg.display.update()
+
     while True:
         scrn_sfc.blit(back_sfc, back_rct)
 
