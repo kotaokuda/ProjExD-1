@@ -2,7 +2,6 @@ import pygame as pg
 import random
 import sys
 
-
 key_delta = {
     pg.K_UP:    [0, -1],
     pg.K_DOWN:  [0, +1],
@@ -58,10 +57,12 @@ class Bomb:
     def __init__(self, colortpl, radius, speedtpl, scr):
         self.sfc = pg.Surface((20, 20)) # 正方形の空のSurface
         self.sfc.set_colorkey((0, 0, 0))
-        pg.draw.circle(self.sfc, colortpl, (10, 10), radius)
+        pg.draw.circle(self.sfc, colortpl, (radius, radius), radius)
         self.rct = self.sfc.get_rect()
-        self.rct.centerx = random.randint(0, scr.rct.width)
-        self.rct.centery = random.randint(0, scr.rct.height)
+        inx = random.randint(0, scr.rct.width)
+        iny = random.randint(0, scr.rct.height)
+        self.rct.centerx = inx
+        self.rct.centery = iny
         scr.sfc.blit(self.sfc, self.rct)
         self.vx, self.vy = speedtpl
 
@@ -75,8 +76,6 @@ class Bomb:
         yoko, tate = check_bound(self.rct, scr.rct)
         self.vx *= yoko
         self.vy *= tate
-
-
 
 
 def check_bound(obj_rct, scr_rct):
@@ -94,39 +93,21 @@ def check_bound(obj_rct, scr_rct):
 
 
 def main():
+    time = 0
+
     clock =pg.time.Clock()
-    # 練習１
-    # pg.display.set_caption("逃げろ！こうかとん")
-    # scrn_sfc = pg.display.set_mode((1600, 900))
-    # scrn_rct = scrn_sfc.get_rect()
-    # pgbg_sfc = pg.image.load("fig/pg_bg.jpg")
-    # pgbg_rct = pgbg_sfc.get_rect()
+
     scr = Screen("逃げろ！こうかとん", (1600, 900), "fig/pg_bg.jpg")
     scr.blit()
 
-    # 練習３
-    # tori_sfc = pg.image.load("fig/6.png")
-    # tori_sfc = pg.transform.rotozoom(tori_sfc, 0, 2.0)
-    # tori_rct = tori_sfc.get_rect()
-    # tori_rct.center = 900, 400
-    # # scrn_sfcにtori_rctに従って，tori_sfcを貼り付ける
-    # sc.sfc.blit(tori_sfc, tori_rct) 
-    tor = Bird("fig/6.png", 2.0, (900, 400))
-    tor.blit(scr)
+    ttb = Bird("fig/6.png", 2.0, (900, 400))
+    ttb.blit(scr)
 
-    # 練習５
-    # bomb_sfc = pg.Surface((20, 20)) # 正方形の空のSurface
-    # bomb_sfc.set_colorkey((0, 0, 0))
-    # pg.draw.circle(bomb_sfc, (255, 0, 0), (10, 10), 10)
-    # bomb_rct = bomb_sfc.get_rect()
-    # bomb_rct.centerx = random.randint(0, scr.rct.width)
-    # bomb_rct.centery = random.randint(0, scr.rct.height)
-    # scr.sfc.blit(bomb_sfc, bomb_rct) 
-    # vx, vy = +1, +1
-    bom = Bomb((255, 0, 0), 10, (+1, +1), scr)
-    bom.blit(scr)
+    bombs = []
+    vx = random.choice([-1, +1])
+    vy = random.choice([-1, +1])
+    bombs.append(Bomb("red", 10, (vx, vy), scr))
 
-    # 練習２
     while True:
         scr.blit()
 
@@ -134,30 +115,21 @@ def main():
             if event.type == pg.QUIT:
                 return
 
-        # key_dct = pg.key.get_pressed()
-        # for key, delta in key_delta.items():
-        #     if key_dct[key]:
-        #         tori.rct.centerx += delta[0]
-        #         tori.rct.centery += delta[1]
-        #     # 練習7
-        #     if check_bound(tori.rct, sc.rct) != (+1, +1):
-        #         tori.rct.centerx -= delta[0]
-        #         tori.rct.centery -= delta[1]
-        # sc.sfc.blit(tori.sfc, tori.rct) # 練習3
-        tor.update(scr)
-        # 練習６
-        # bomb_rct.move_ip(vx, vy)
-        # scr.sfc.blit(bomb_sfc, bomb_rct) 
-        # yoko, tate = check_bound(bomb_rct, scr.rct)
-        # vx *= yoko
-        # vy *= tate
-        bom.update(scr)
+        ttb.update(scr)
 
-        # 練習８
-        if tor.rct.colliderect(bom.rct):
-            return
+        if time % 1000 == 0:
+            vx = random.choice([-1, +1])
+            vy = random.choice([-1, +1])
+            bombs.append(Bomb("red", 10, (vx, vy), scr))
+
+        for bom in bombs:
+            bom.update(scr)
+
+            if ttb.rct.colliderect(bom.rct):
+                return
 
         pg.display.update()
+        time += 1
         clock.tick(1000)
 
 if __name__ == "__main__":
