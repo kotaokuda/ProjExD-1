@@ -5,7 +5,8 @@ import time
                             
 
 class Screen:
-    """スクリーンを作るためのクラス
+    """
+    スクリーンを作るためのクラス
     """
     def __init__(self, title, whtpl, bgfile):
         pg.display.set_caption(title)
@@ -19,7 +20,8 @@ class Screen:
 
 
 class Bird:
-    """１Pこうかとんを作るためのクラス
+    """
+    １Pこうかとんを作るためのクラス
     """
     key_delta = {
         pg.K_UP:    [0, -2],
@@ -62,7 +64,8 @@ class Bird:
 
 
 class Bird2p:
-    """2Pこうかとんを作るためのクラス
+    """
+    2Pこうかとんを作るためのクラス
     """
     key_delta = {
         pg.K_w:    [0, -2],
@@ -106,7 +109,8 @@ class Bird2p:
 
 
 class Bomb:
-    """爆弾を作るためのクラス
+    """
+    爆弾を作るためのクラス
     """
     def __init__(self, colortpl, radius, speedtpl, scr):
         self.sfc = pg.Surface((20, 20)) # 正方形の空のSurface
@@ -137,7 +141,8 @@ class Bomb:
 
 
 class Item:
-    """アイテムを作るためのクラス
+    """
+    アイテムを作るためのクラス
     """
     def __init__(self, title, figfile, zoom, scr):
         self.sfc = pg.image.load(figfile) #アイテム画像を読み込み
@@ -257,7 +262,8 @@ def main():
     
     scr.blit()
 
-    """リザルト画面にリザルトを表示
+    """
+    リザルト画面にリザルトを表示
     """
 
     result = pg.font.Font(None, 400)
