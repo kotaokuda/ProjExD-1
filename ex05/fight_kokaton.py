@@ -55,9 +55,9 @@ class Bird:
 
         if self.status != "normal": #statusの継続時間を測る
             self.time += 1
-        if self.time > 4000: #4000たったらstatus効果を打ち消し
-            self.status = "normal"
-            self.time = 0
+            if self.time > 4000: #4000たったらstatus効果を打ち消し
+                self.status = "normal"
+                self.time = 0
 
     def change_status(self, stauts): #ステータスを変更
         self.status = stauts
@@ -99,9 +99,9 @@ class Bird2p:
 
         if self.status != "normal": #statusの継続時間を測る
             self.time += 1
-        if self.time > 4000: #4000たったらstatus効果を打ち消し
-            self.status = "normal"
-            self.time = 0
+            if self.time > 4000: #4000たったらstatus効果を打ち消し
+                self.status = "normal"
+                self.time = 0
 
     def change_status(self, stauts): #ステータスを変更
         self.status = stauts
