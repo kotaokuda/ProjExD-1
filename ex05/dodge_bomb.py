@@ -38,6 +38,21 @@ class Bird:
         self.rct = self.sfc.get_rect()
         self.rct.center = center
 
+    def blit(self, scr):
+        scr.sfc.blit(self.sfc, self.rct)
+
+    def update(self, scr):
+        key_dct = pg.key.get_pressed()
+        for key, delta in key_delta.items():
+            if key_dct[key]:
+                self.rct.centerx += delta[0]
+                self.rct.centery += delta[1]
+            # 練習7
+            if check_bound(self.rct, scr.rct) != (+1, +1):
+                self.rct.centerx -= delta[0]
+                self.rct.centery -= delta[1]
+        scr.sfc.blit(self.sfc, self.rct) # 練習3
+
 
 def check_bound(obj_rct, scr_rct):
     """
@@ -61,8 +76,8 @@ def main():
     # scrn_rct = scrn_sfc.get_rect()
     # pgbg_sfc = pg.image.load("fig/pg_bg.jpg")
     # pgbg_rct = pgbg_sfc.get_rect()
-    sc = Screen("逃げろ！こうかとん", (1600, 900), "fig/pg_bg.jpg")
-    sc.blit()
+    scr = Screen("逃げろ！こうかとん", (1600, 900), "fig/pg_bg.jpg")
+    scr.blit()
 
     # 練習３
     # tori_sfc = pg.image.load("fig/6.png")
@@ -71,46 +86,47 @@ def main():
     # tori_rct.center = 900, 400
     # # scrn_sfcにtori_rctに従って，tori_sfcを貼り付ける
     # sc.sfc.blit(tori_sfc, tori_rct) 
-    tori = Bird("fig/6.png", 2.0, (900, 400))
+    tor = Bird("fig/6.png", 2.0, (900, 400))
+    tor.blit(scr)
 
     # 練習５
     bomb_sfc = pg.Surface((20, 20)) # 正方形の空のSurface
     bomb_sfc.set_colorkey((0, 0, 0))
     pg.draw.circle(bomb_sfc, (255, 0, 0), (10, 10), 10)
     bomb_rct = bomb_sfc.get_rect()
-    bomb_rct.centerx = random.randint(0, sc.rct.width)
-    bomb_rct.centery = random.randint(0, sc.rct.height)
-    sc.sfc.blit(bomb_sfc, bomb_rct) 
+    bomb_rct.centerx = random.randint(0, scr.rct.width)
+    bomb_rct.centery = random.randint(0, scr.rct.height)
+    scr.sfc.blit(bomb_sfc, bomb_rct) 
     vx, vy = +1, +1
 
     # 練習２
     while True:
-        sc.sfc.blit(sc.bgi_sfc, sc.bgi_rct) 
+        # sc.sfc.blit(sc.bgi_sfc, sc.bgi_rct) 
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 return
 
-        key_dct = pg.key.get_pressed()
-        for key, delta in key_delta.items():
-            if key_dct[key]:
-                tori.rct.centerx += delta[0]
-                tori.rct.centery += delta[1]
-            # 練習7
-            if check_bound(tori.rct, sc.rct) != (+1, +1):
-                tori.rct.centerx -= delta[0]
-                tori.rct.centery -= delta[1]
-        sc.sfc.blit(tori.sfc, tori.rct) # 練習3
+        # key_dct = pg.key.get_pressed()
+        # for key, delta in key_delta.items():
+        #     if key_dct[key]:
+        #         tori.rct.centerx += delta[0]
+        #         tori.rct.centery += delta[1]
+        #     # 練習7
+        #     if check_bound(tori.rct, sc.rct) != (+1, +1):
+        #         tori.rct.centerx -= delta[0]
+        #         tori.rct.centery -= delta[1]
+        # sc.sfc.blit(tori.sfc, tori.rct) # 練習3
 
         # 練習６
         bomb_rct.move_ip(vx, vy)
-        sc.sfc.blit(bomb_sfc, bomb_rct) 
-        yoko, tate = check_bound(bomb_rct, sc.rct)
+        scr.sfc.blit(bomb_sfc, bomb_rct) 
+        yoko, tate = check_bound(bomb_rct, scr.rct)
         vx *= yoko
         vy *= tate
 
         # 練習８
-        if tori.rct.colliderect(bomb_rct):
+        if tor.rct.colliderect(bomb_rct):
             return
 
         pg.display.update()
