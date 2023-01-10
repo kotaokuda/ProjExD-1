@@ -31,11 +31,8 @@ class Bird:#こうかとんを生成
     def update(self, scr):
         key_dct = pg.key.get_pressed()
         self.rct.centery += 2
-        if self.rct.bottom > scr.rct.bottom:
-            self.rct.centery -= 2
-            clash()
         if key_dct[pg.K_SPACE]:
-            for _ in range(5):
+            for _ in range(7):
                 self.rct.centery += -0.1
                 if self.rct.top < scr.rct.top:
                     self.rct.centery += 0.1
@@ -45,7 +42,6 @@ class Bird:#こうかとんを生成
 class Wall:
     def __init__(self):
         self.top = random.randint(0, 6)
-        print(self.top , "top")
         self.sfc1 = pg.Surface((100, self.top * 100))
         self.sfc1.set_colorkey((0, 0, 0))
         self.sfc2 = pg.Surface((100, 600 - self.top * 100))
@@ -56,7 +52,6 @@ class Wall:
         self.rct1.center = (1550, self.top * 50)
         self.rct2 = self.sfc2.get_rect() 
         self.rct2.center = (1550, 600 + self.top * 50)
-        print(self.rct1.height , self.rct2.height)
 
 
     def blit(self, scr):
@@ -69,13 +64,8 @@ class Wall:
         self.blit(scr)
 
 
-def clash():
-    main()
-    pg.quit()
-    sys.exit()
-
-
 def main():
+    global game
     time = 0
 
     clock =pg.time.Clock()
@@ -95,12 +85,13 @@ def main():
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
+                game = False
                 return
 
         kkt.update(scr)
 
         if time % 700 == 699:
-            wlls.append(Wall())
+                wlls.append(Wall())
 
         for wll in wlls:
             wll.update(scr)
@@ -108,7 +99,10 @@ def main():
                 wlls.remove(wll)
 
             if kkt.rct.colliderect(wll.rct1) or kkt.rct.colliderect(wll.rct2):
-                clash()
+                return
+        
+        if kkt.rct.bottom > scr.rct.bottom:
+            return
     
         pg.display.update()
         time += 1
@@ -116,7 +110,9 @@ def main():
 
 
 if __name__ == "__main__":
+    game = True
     pg.init() # 初期化
-    main() # ゲームの本体
+    while game:
+        main() # ゲームの本体
     pg.quit() # 初期化の解除
     sys.exit()
