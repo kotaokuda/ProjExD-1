@@ -63,7 +63,7 @@ class Wall:
         self.rct2.move_ip(-1, 0)
         self.blit(scr)
 
-class Button:#ボタン用imageの生成
+class Button:#ボタン用imageの生成 C0A21081作成
     def __init__(self, figfile, center):
         self.sfc = pg.image.load(figfile)
         self.sfc = pg.transform.rotozoom(self.sfc, 0, 2)
@@ -85,7 +85,7 @@ def main():
 
     clock =pg.time.Clock()
 
-    scr = Screen("飛べ！こうかとん", (1600, 900), "fig/pg_bg.jpg")
+    scr = Screen("飛べ！こうかとん", (1600, 900), "fig/pg_bg.jpg") #C0A21081作成↓
     scr.blit()
     
     kbn_start = Button("fig/3.png", (400, 450))#スタートボタンを生成
@@ -126,7 +126,7 @@ def main():
         scr.sfc.blit(txt_s, (kbn_start.rct.centerx - 100, kbn_start.rct.centery + 50)) 
         scr.sfc.blit(txt_e, (kbn_exit.rct.centerx - 100, kbn_exit.rct.centery + 50)) 
 
-        pg.display.update()
+        pg.display.update() #C0A21081作成↑
 
     kkt = Bird("fig/3.png", 2.0, (scr.whtpl[0]/2, scr.whtpl[1]/2))
     kkt.blit(scr)
