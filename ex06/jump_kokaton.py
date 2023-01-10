@@ -78,6 +78,8 @@ def main():
     score = 0 #鍵和田崇允：追加部分　壁を越えた回数
     clock =pg.time.Clock()
 
+    index = 0       #ゲームの進行を管理する変数
+    
     scr = Screen("飛べ！こうかとん", (1600, 900), "fig/pg_bg.jpg")
     scr.blit()
 
@@ -87,6 +89,9 @@ def main():
     wlls = [Wall()]
     wlls[0].blit(scr)
 
+    font1 = pg.font.Font(None, 200)     #テキストのフォントおよびサイズの設定
+    font2 = pg.font.Font(None, 100)     #テキストのフォントおよびサイズの設定
+
     while True:
         scr.blit()
 
@@ -95,34 +100,58 @@ def main():
                 game = False
                 return
 
-        kkt.update(scr)
+            if event.type == pg.KEYDOWN:                                    #キーが押されたとき
+                if index == 1:                                              #indexが1の時
+                    if event.key == pg.K_x:                                 #押されたキーがxの時
+                        game = False                                        #gameをFalseにする
+                        return                                              #main関数を抜ける
+                    if event.key == pg.K_r:                                 #押されたキーがrの時
+                        index = 0                                           #indexを0にする
+                        kkt.rct.center = (scr.whtpl[0]/2, scr.whtpl[1]/2)   #こうかとんの位置を初期化する
+                        wlls = [Wall()]                                     #壁をリセットする
+                        time = 0                                            #タイマーをリセットする
+                        pg.display.update()                                 #ディスプレイを更新する
+        
+        if index == 0:      #indexが0の時
 
-        if time % 700 == 699:
-                wlls.append(Wall())
+            kkt.update(scr)
 
-        for wll in wlls:
-            wll.update(scr)
-            if wll.rct1.right < 0:
-                wlls.remove(wll)
+            if time % 700 == 699:
+                    wlls.append(Wall())
 
-            if kkt.rct.colliderect(wll.rct1) or kkt.rct.colliderect(wll.rct2):
-                return
+            for wll in wlls:
+                wll.update(scr)
+                if kkt.rct.centerx > wll.rct1.right and wll.pass_sitayo:   #鍵和田崇允：追加部分（ここから下2行）　スコアを増やす
+                  score += 1
+                  wll.pass_sitayo = False #重複計算回避
+                if wll.rct1.right < 0:
+                    wlls.remove(wll)
+
+                if kkt.rct.colliderect(wll.rct1) or kkt.rct.colliderect(wll.rct2):
+                    index = 1 #奥田
             
-            if kkt.rct.centerx > wll.rct1.right and wll.pass_sitayo:   #鍵和田崇允：追加部分（ここから下2行）　スコアを増やす
-                score += 1
-                wll.pass_sitayo = False #重複計算回避
-                
-        if kkt.rct.bottom > scr.rct.bottom:
-            return
-        #鍵和田崇允：追加部分 時間表示+スコア表示
-        fonto = pg.font.Font(None, 80)
-        time_str = fonto.render("Time:"+kkt.timecount(), True, (0, 0, 0))
-        scr.sfc.blit(time_str, (1300, 0))
-        score_str = fonto.render("Score:"+str(score), True, (0, 0, 0))
-        scr.sfc.blit(score_str, (1000, 0))
+            if kkt.rct.bottom > scr.rct.bottom:
+                index = 1
+        
+            
+            #鍵和田崇允：追加部分 時間表示+スコア表示
+            fonto = pg.font.Font(None, 80)
+            time_str = fonto.render("Time:"+kkt.timecount(), True, (0, 0, 0))
+            scr.sfc.blit(time_str, (1300, 0))
+            score_str = fonto.render("Score:"+str(score), True, (0, 0, 0))
+            scr.sfc.blit(score_str, (1000, 0))
+            pg.display.update()
+            time += 1
 
-        pg.display.update()
-        time += 1
+            if index == 1:      #indexが1の時 #奥田
+
+                text1 = font1.render("GAME OVER!", True, (255, 0, 0))                   #メッセージの文字、滑らかにするかを指定、色を指定
+                text2 = font2.render("Finish [X] Restart [R]", True, (255, 255, 255))   #メッセージの文字、滑らかにするかを指定、色を指定
+                scr.sfc.blit(text1, (350, 300))                                         #メッセージと、場所を指定して表示
+                scr.sfc.blit(text2, (450, 500))                                         #メッセージと、場所を指定して表示
+
+                pg.display.update()     #画面を更新する
+
         clock.tick(1000)
 
 
