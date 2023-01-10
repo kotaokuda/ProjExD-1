@@ -63,21 +63,75 @@ class Wall:
         self.rct2.move_ip(-1, 0)
         self.blit(scr)
 
+class Button:#ボタン用imageの生成
+    def __init__(self, figfile, center):
+        self.sfc = pg.image.load(figfile)
+        self.sfc = pg.transform.rotozoom(self.sfc, 0, 2)
+        self.sfc = pg.transform.flip(self.sfc, True, False) #向きを反転
+        self.rct = self.sfc.get_rect()
+        self.rct.center = center
+
+    def blit(self, scr):
+        scr.sfc.blit(self.sfc, self.rct)
+
+    def update(self, scr):
+        self.blit(scr)
+
 
 def main():
     global game
     time = 0
+    Start = True
 
     clock =pg.time.Clock()
 
-
     scr = Screen("飛べ！こうかとん", (1600, 900), "fig/pg_bg.jpg")
     scr.blit()
+    
+    kbn_start = Button("fig/3.png", (400, 450))#スタートボタンを生成
+    kbn_start.blit(scr)
+    kbn_exit = Button("fig/2.png", (1200, 450))#終了ボタンを生成
+    kbn_exit.blit(scr)
+    start = pg.font.Font(None, 100)
+    exit = pg.font.Font(None, 100)
+    txt_s = start.render("START", True, "black")
+    txt_e = exit.render("EXIT", True, "black")
+    scr.sfc.blit(txt_s, (kbn_start.rct.width, kbn_start.rct.height)) 
+    scr.sfc.blit(txt_e, (kbn_exit.rct.width, kbn_exit.rct.height)) 
+
+
+    while Start:
+        scr.blit()
+
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                game = False
+                return
+            elif event.type == pg.MOUSEBUTTONUP:
+                posx, posy = event.pos
+                if kbn_start.rct.left < posx and posx < kbn_start.rct.right:
+                    if kbn_start.rct.bottom > posy and posy > kbn_start.rct.top:#画像範囲内をクリックしたら反応
+                        Start =False#スタート画面のwhileを脱出
+                elif kbn_exit.rct.left < posx and posx < kbn_exit.rct.right:
+                    if kbn_exit.rct.bottom > posy and posy > kbn_exit.rct.top:#画像範囲内をクリックしたら反応
+                        game = False
+                        return
+
+            
+        kbn_start.update(scr)
+        kbn_exit.update(scr)
+
+        txt_s = start.render("START", True, "black")
+        txt_e = exit.render("EXIT", True, "black")
+        scr.sfc.blit(txt_s, (kbn_start.rct.centerx - 100, kbn_start.rct.centery + 50)) 
+        scr.sfc.blit(txt_e, (kbn_exit.rct.centerx - 100, kbn_exit.rct.centery + 50)) 
+
+        pg.display.update()
 
     kkt = Bird("fig/3.png", 2.0, (scr.whtpl[0]/2, scr.whtpl[1]/2))
     kkt.blit(scr)
 
-    wlls = [Wall()]
+    wlls = [Wall()]    
     wlls[0].blit(scr)
 
     while True:
