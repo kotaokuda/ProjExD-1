@@ -1,6 +1,8 @@
 import pygame as pg
 import random
+import time #鍵和田崇允：追加部分
 import sys
+
 
 
 class Screen:#背景を生成
@@ -12,7 +14,7 @@ class Screen:#背景を生成
         self.rct = self.sfc.get_rect()
         self.bgi_sfc = pg.image.load(bgfile)
         self.bgi_rct = self.bgi_sfc.get_rect()
- 
+
     def blit(self):
         self.sfc.blit(self.bgi_sfc, self.bgi_rct)
 
@@ -24,16 +26,22 @@ class Bird:#こうかとんを生成
         self.sfc = pg.transform.flip(self.sfc, True, False) #向きを反転
         self.rct = self.sfc.get_rect()
         self.rct.center = center
+        self.arrive_time = time.time()  #鍵和田崇允：追加部分　時間の計測用、なぜかメイン関数内で処理できなかったのでこちらで代用
+
+    def timecount(self):  #鍵和田崇允：追加部分　生存時間を返す
+        time_dead = time.time()
+        time_str = str(round(time_dead - self.arrive_time, 1))
+        return time_str
 
     def blit(self, scr):
         scr.sfc.blit(self.sfc, self.rct)
 
     def update(self, scr):
         key_dct = pg.key.get_pressed()
-        self.rct.centery += 2
+        self.rct.centery += 1
         if key_dct[pg.K_SPACE]:
             for _ in range(7):
-                self.rct.centery += -0.1
+                self.rct.centery += -0.05
                 if self.rct.top < scr.rct.top:
                     self.rct.centery += 0.1
         scr.sfc.blit(self.sfc, self.rct) # 練習3
@@ -52,7 +60,7 @@ class Wall:
         self.rct1.center = (1550, self.top * 50)
         self.rct2 = self.sfc2.get_rect() 
         self.rct2.center = (1550, 600 + self.top * 50)
-
+        self.pass_sitayo = True #鍵和田崇允：追加部分（点数計算が重複しないようにするフラグ）
 
     def blit(self, scr):
         scr.sfc.blit(self.sfc1, self.rct1)
@@ -67,11 +75,11 @@ class Wall:
 def main():
     global game
     time = 0
-    index = 0       #ゲームの進行を管理する変数
-
+    score = 0 #鍵和田崇允：追加部分　壁を越えた回数
     clock =pg.time.Clock()
 
-
+    index = 0       #ゲームの進行を管理する変数
+    
     scr = Screen("飛べ！こうかとん", (1600, 900), "fig/pg_bg.jpg")
     scr.blit()
 
@@ -113,19 +121,29 @@ def main():
 
             for wll in wlls:
                 wll.update(scr)
+                if kkt.rct.centerx > wll.rct1.right and wll.pass_sitayo:   #鍵和田崇允：追加部分（ここから下2行）　スコアを増やす
+                  score += 1
+                  wll.pass_sitayo = False #重複計算回避
                 if wll.rct1.right < 0:
                     wlls.remove(wll)
 
                 if kkt.rct.colliderect(wll.rct1) or kkt.rct.colliderect(wll.rct2):
-                    index = 1
+                    index = 1 #奥田
             
             if kkt.rct.bottom > scr.rct.bottom:
                 index = 1
         
+            
+            #鍵和田崇允：追加部分 時間表示+スコア表示
+            fonto = pg.font.Font(None, 80)
+            time_str = fonto.render("Time:"+kkt.timecount(), True, (0, 0, 0))
+            scr.sfc.blit(time_str, (1300, 0))
+            score_str = fonto.render("Score:"+str(score), True, (0, 0, 0))
+            scr.sfc.blit(score_str, (1000, 0))
             pg.display.update()
             time += 1
 
-            if index == 1:      #indexが1の時
+            if index == 1:      #indexが1の時 #奥田
 
                 text1 = font1.render("GAME OVER!", True, (255, 0, 0))                   #メッセージの文字、滑らかにするかを指定、色を指定
                 text2 = font2.render("Finish [X] Restart [R]", True, (255, 255, 255))   #メッセージの文字、滑らかにするかを指定、色を指定
@@ -139,7 +157,7 @@ def main():
 
 if __name__ == "__main__":
     game = True
-    pg.init() # 初期化
+    pg.init() #初期化
     while game:
         main() # ゲームの本体
     pg.quit() # 初期化の解除
