@@ -1,4 +1,5 @@
 import pygame as pg
+import pygame
 import random
 import time #鍵和田崇允：追加部分
 import sys
@@ -20,8 +21,14 @@ class Screen:#背景を生成
 
 
 class Bird:#こうかとんを生成
-    def __init__(self, figfile, zoom, center):
-        self.sfc = pg.image.load(figfile)
+    def __init__(self, zoom, center):
+        self.images = []   #C0A21169 山内利功
+        self.index = 0
+        for num in range(1, 4):
+            img = pygame.image.load(f"fig/{num}.png")
+            self.images.append(img)
+        self.index = random.randint(0, 2)
+        self.sfc =  self.images[self.index] # インデックスを用いて画像を取得
         self.sfc = pg.transform.rotozoom(self.sfc, 0, zoom)
         self.sfc = pg.transform.flip(self.sfc, True, False) #向きを反転
         self.rct = self.sfc.get_rect()
