@@ -118,7 +118,7 @@ def score():
 #メイン
 def main():
     global game
-    time = 0
+    timer = 0
     Start = True
     score = 0 #鍵和田崇允：追加部分　壁を越えた回数
     clock =pg.time.Clock()
@@ -193,16 +193,17 @@ def main():
                     if event.key == pg.K_r:                                 #押されたキーがrの時
                         index = 0                                           #indexを0にする
                         score = 0
+                        kkt.arrive_time = time.time()
                         kkt.rct.center = (scr.whtpl[0]/2, scr.whtpl[1]/2)   #こうかとんの位置を初期化する
                         wlls = [Wall()]                                     #壁をリセットする
-                        time = 0                                            #タイマーをリセットする
+                        timer = 0                                            #タイマーをリセットする
                         pg.display.update()                                 #ディスプレイを更新する
         
         if index == 0:      #indexが0の時
 
             kkt.update(scr)
 
-            if time % 700 == 699:
+            if timer % 700 == 699:
                     wlls.append(Wall())
 
             for wll in wlls:
@@ -229,7 +230,7 @@ def main():
             score_str = fonto.render("Score:"+str(score), True, (0, 0, 0))
             scr.sfc.blit(score_str, (1000, 0))
             pg.display.update()
-            time += 1
+            timer += 1
 
             if index == 1:      #indexが1の時 #奥田
 
@@ -248,6 +249,6 @@ if __name__ == "__main__":
     game = True
     pg.init() # 初期化
     main() # ゲームの本体
-    pg.quit() # 初期化の解除
     score()
+    pg.quit() # 初期化の解除
     sys.exit()
