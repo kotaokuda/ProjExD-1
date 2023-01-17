@@ -1,7 +1,9 @@
 import pygame as pg
 import pygame
 import random
+import time #鍵和田崇允：追加部分
 import sys
+
 
 
 class Screen:#背景を生成
@@ -13,7 +15,7 @@ class Screen:#背景を生成
         self.rct = self.sfc.get_rect()
         self.bgi_sfc = pg.image.load(bgfile)
         self.bgi_rct = self.bgi_sfc.get_rect()
- 
+
     def blit(self):
         self.sfc.blit(self.bgi_sfc, self.bgi_rct)
 
@@ -31,16 +33,22 @@ class Bird:#こうかとんを生成
         self.sfc = pg.transform.flip(self.sfc, True, False) #向きを反転
         self.rct = self.sfc.get_rect()
         self.rct.center = center
+        self.arrive_time = time.time()  #鍵和田崇允：追加部分　時間の計測用、なぜかメイン関数内で処理できなかったのでこちらで代用
+
+    def timecount(self):  #鍵和田崇允：追加部分　生存時間を返す
+        time_dead = time.time()
+        time_str = str(round(time_dead - self.arrive_time, 1))
+        return time_str
 
     def blit(self, scr):
         scr.sfc.blit(self.sfc, self.rct)
 
     def update(self, scr):
         key_dct = pg.key.get_pressed()
-        self.rct.centery += 2
+        self.rct.centery += 1
         if key_dct[pg.K_SPACE]:
             for _ in range(7):
-                self.rct.centery += -0.1
+                self.rct.centery += -0.05
                 if self.rct.top < scr.rct.top:
                     self.rct.centery += 0.1
         scr.sfc.blit(self.sfc, self.rct) # 練習3
@@ -59,7 +67,7 @@ class Wall:
         self.rct1.center = (1550, self.top * 50)
         self.rct2 = self.sfc2.get_rect() 
         self.rct2.center = (1550, 600 + self.top * 50)
-
+        self.pass_sitayo = True #鍵和田崇允：追加部分（点数計算が重複しないようにするフラグ）
 
     def blit(self, scr):
         scr.sfc.blit(self.sfc1, self.rct1)
@@ -70,76 +78,26 @@ class Wall:
         self.rct2.move_ip(-1, 0)
         self.blit(scr)
 
-class Button:#ボタン用imageの生成 C0A21081作成
-    def __init__(self, figfile, center):
-        self.sfc = pg.image.load(figfile)
-        self.sfc = pg.transform.rotozoom(self.sfc, 0, 2)
-        self.sfc = pg.transform.flip(self.sfc, True, False) #向きを反転
-        self.rct = self.sfc.get_rect()
-        self.rct.center = center
-
-    def blit(self, scr):
-        scr.sfc.blit(self.sfc, self.rct)
-
-    def update(self, scr):
-        self.blit(scr)
-
 
 def main():
     global game
     time = 0
-    Start = True
-
+    score = 0 #鍵和田崇允：追加部分　壁を越えた回数
     clock =pg.time.Clock()
 
-    scr = Screen("飛べ！こうかとん", (1600, 900), "fig/pg_bg.jpg") #C0A21081作成↓
-    scr.blit()
+    index = 0       #ゲームの進行を管理する変数
     
-    kbn_start = Button("fig/3.png", (400, 450))#スタートボタンを生成
-    kbn_start.blit(scr)
-    kbn_exit = Button("fig/2.png", (1200, 450))#終了ボタンを生成
-    kbn_exit.blit(scr)
-    start = pg.font.Font(None, 100)
-    exit = pg.font.Font(None, 100)
-    txt_s = start.render("START", True, "black")
-    txt_e = exit.render("EXIT", True, "black")
-    scr.sfc.blit(txt_s, (kbn_start.rct.width, kbn_start.rct.height)) 
-    scr.sfc.blit(txt_e, (kbn_exit.rct.width, kbn_exit.rct.height)) 
-
-
-    while Start:
-        scr.blit()
-
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                game = False
-                return
-            elif event.type == pg.MOUSEBUTTONUP:
-                posx, posy = event.pos
-                if kbn_start.rct.left < posx and posx < kbn_start.rct.right:
-                    if kbn_start.rct.bottom > posy and posy > kbn_start.rct.top:#画像範囲内をクリックしたら反応
-                        Start =False#スタート画面のwhileを脱出
-                elif kbn_exit.rct.left < posx and posx < kbn_exit.rct.right:
-                    if kbn_exit.rct.bottom > posy and posy > kbn_exit.rct.top:#画像範囲内をクリックしたら反応
-                        game = False
-                        return
-
-            
-        kbn_start.update(scr)
-        kbn_exit.update(scr)
-
-        txt_s = start.render("START", True, "black")
-        txt_e = exit.render("EXIT", True, "black")
-        scr.sfc.blit(txt_s, (kbn_start.rct.centerx - 100, kbn_start.rct.centery + 50)) 
-        scr.sfc.blit(txt_e, (kbn_exit.rct.centerx - 100, kbn_exit.rct.centery + 50)) 
-
-        pg.display.update() #C0A21081作成↑
+    scr = Screen("飛べ！こうかとん", (1600, 900), "fig/pg_bg.jpg")
+    scr.blit()
 
     kkt = Bird("fig/3.png", 2.0, (scr.whtpl[0]/2, scr.whtpl[1]/2))
     kkt.blit(scr)
 
-    wlls = [Wall()]    
+    wlls = [Wall()]
     wlls[0].blit(scr)
+
+    font1 = pg.font.Font(None, 200)     #テキストのフォントおよびサイズの設定
+    font2 = pg.font.Font(None, 100)     #テキストのフォントおよびサイズの設定
 
     while True:
         scr.blit()
@@ -149,30 +107,64 @@ def main():
                 game = False
                 return
 
-        kkt.update(scr)
-
-        if time % 700 == 699:
-                wlls.append(Wall())
-
-        for wll in wlls:
-            wll.update(scr)
-            if wll.rct1.right < 0:
-                wlls.remove(wll)
-
-            if kkt.rct.colliderect(wll.rct1) or kkt.rct.colliderect(wll.rct2):
-                return
+            if event.type == pg.KEYDOWN:                                    #キーが押されたとき
+                if index == 1:                                              #indexが1の時
+                    if event.key == pg.K_x:                                 #押されたキーがxの時
+                        game = False                                        #gameをFalseにする
+                        return                                              #main関数を抜ける
+                    if event.key == pg.K_r:                                 #押されたキーがrの時
+                        index = 0                                           #indexを0にする
+                        kkt.rct.center = (scr.whtpl[0]/2, scr.whtpl[1]/2)   #こうかとんの位置を初期化する
+                        wlls = [Wall()]                                     #壁をリセットする
+                        time = 0                                            #タイマーをリセットする
+                        pg.display.update()                                 #ディスプレイを更新する
         
-        if kkt.rct.bottom > scr.rct.bottom:
-            return
-    
-        pg.display.update()
-        time += 1
+        if index == 0:      #indexが0の時
+
+            kkt.update(scr)
+
+            if time % 700 == 699:
+                    wlls.append(Wall())
+
+            for wll in wlls:
+                wll.update(scr)
+                if kkt.rct.centerx > wll.rct1.right and wll.pass_sitayo:   #鍵和田崇允：追加部分（ここから下2行）　スコアを増やす
+                  score += 1
+                  wll.pass_sitayo = False #重複計算回避
+                if wll.rct1.right < 0:
+                    wlls.remove(wll)
+
+                if kkt.rct.colliderect(wll.rct1) or kkt.rct.colliderect(wll.rct2):
+                    index = 1 #奥田
+            
+            if kkt.rct.bottom > scr.rct.bottom:
+                index = 1
+        
+            
+            #鍵和田崇允：追加部分 時間表示+スコア表示
+            fonto = pg.font.Font(None, 80)
+            time_str = fonto.render("Time:"+kkt.timecount(), True, (0, 0, 0))
+            scr.sfc.blit(time_str, (1300, 0))
+            score_str = fonto.render("Score:"+str(score), True, (0, 0, 0))
+            scr.sfc.blit(score_str, (1000, 0))
+            pg.display.update()
+            time += 1
+
+            if index == 1:      #indexが1の時 #奥田
+
+                text1 = font1.render("GAME OVER!", True, (255, 0, 0))                   #メッセージの文字、滑らかにするかを指定、色を指定
+                text2 = font2.render("Finish [X] Restart [R]", True, (255, 255, 255))   #メッセージの文字、滑らかにするかを指定、色を指定
+                scr.sfc.blit(text1, (350, 300))                                         #メッセージと、場所を指定して表示
+                scr.sfc.blit(text2, (450, 500))                                         #メッセージと、場所を指定して表示
+
+                pg.display.update()     #画面を更新する
+
         clock.tick(1000)
 
 
 if __name__ == "__main__":
     game = True
-    pg.init() # 初期化
+    pg.init() #初期化
     while game:
         main() # ゲームの本体
     pg.quit() # 初期化の解除
